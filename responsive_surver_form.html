@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Responsive Survey Form</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            body{
+                font-family: Arial, sans-serif;
+                padding: 20px;
+            }
+
+            .form-container {
+                display: flex;
+                flex-direction: column;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+            .form-container div {
+                display: flex;
+                gap: 2px;
+                margin-bottom: 10px;
+            }
+
+            input, textarea {
+                padding: 8px;
+                font-size: 15px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            label{
+                padding: 4px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #28a745;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #218838;
+            }
+
+
+            button:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+
+            /* Media query for larger screens */
+        @media(max-width: 768px) {
+            .form-container {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .form-container div {
+                display: grid;
+                margin-right: 20px;
+            }
+
+            .form-container div:last-child {
+                margin-right: 0;
+            }
+
+            .form-container textarea {
+                flex-basis: 100%;
+            }
+
+            .form-data{
+                width: 50%;
+                margin: 0 auto;
+            }
+        }
+        </style>
+
+    </head>
+
+    <body>
+        <!-- SVG Element for Geolocation Visualization -->
+        
+
+        <form class="form-container" id="myForm">
+            <fieldset>
+                <legend>Responsive Survey Form</legend><br>
+
+                <div id="svg-container">
+                    <svg id="geo-rectangle" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="400" height="150" fill="gray"></rect>
+                    </svg>
+                </div>
+
+                <div class="draggable-item" draggable="true" id="name-field">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div><br>
+
+                <div class="draggable-item" draggable="true" id="email-field">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div><br>
+
+                <div class="draggable-item" draggable="true" id="message-field">
+                    <label for="message">Message:</label><br>
+                    <textarea id="message" name="message" rows="10" cols="30" required></textarea>
+                </div><br>
+
+                 <!-- Geolocation Button -->
+                <button type="button" id="geolocation-button" onclick="getLocation()">User Geolocation</button>
+                <p id="location-status"></p>                    
+
+                <!-- Hidden input fields for latitude and longitude -->
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
+
+                <div style="flex-basis: 100%; margin-top: 20px;">
+                    <button type="submit" id="submitButton" disabled>Submit</button>
+                </div>
+            </fieldset>
+        </form>
+        <br><br><hr>
+
+        <!-- Display form data here -->
+
+        <div id="form-data">
+            <h2>Display From Data:</h2><br>
+        </div>
+
+
+        <script>
+            const form = document.getElementById('myForm');
+            const submitButton = document.getElementById('submitButton');
+            const inputs = form.querySelectorAll('input, textarea');
+
+            //Geolocation
+            const geoButton = document.getElementById('geolocation-button');
+            const locationStatus = document.getElementById("location-status");
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+
+            const formDataDisplay = document.getElementById('form-data');
+
+            //SVG Rectangle
+            const geoRectangle = document.getElementById('geo-rectangle').querySelector('rect'); 
+
+
+
+            let draggedItem = null;
+
+
+
+    
+            // Function to check if all form fields are valid
+            function checkFormValidity() {
+                let isFormValid = form.checkValidity(); // Checks if the form is valid
+                submitButton.disabled = !isFormValid; // Enables or disables the button
+            }
+    
+            // Add event listeners to all input fields to check validity on input
+            inputs.forEach(input => {
+                input.addEventListener('input', checkFormValidity);
+            });
+    
+            // Initial check to disable the button on load
+            checkFormValidity();
+
+
+            //Geolocation 
+
+            function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                locationStatus.innerHTML = "Geolocation is not supported by this browser.";
+            }
+            }
+
+            function showPosition(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                latitudeInput.value = latitude;
+                longitudeInput.value = longitude;
+
+                locationStatus.innerHTML = `Location captured: Latitude ${latitude}, Longitude ${longitude}`;
+
+                checkFormValidity();
+
+                // Update SVG rectangle color based on geolocation
+                 updateRectangleColor(latitude, longitude);
+            }
+
+        // Drag and drop functionality
+
+        // Handle drag start
+        form.addEventListener('dragstart', (event) => {
+            draggedItem = event.target;
+            event.target.style.opacity = "0.5";
+        });
+
+        // Handle drag end
+        form.addEventListener('dragend', (event) => {
+            event.target.style.opacity = "";
+        });
+
+        // Handle drag over
+        form.addEventListener('dragover', (event) => {
+            event.preventDefault(); // Necessary to allow dropping
+            if (event.target.classList.contains('draggable-item')) {
+                event.target.classList.add('drag-over');
+            }
+        });
+
+        // Handle drag leave
+        form.addEventListener('dragleave', (event) => {
+            if (event.target.classList.contains('draggable-item')) {
+                event.target.classList.remove('drag-over');
+            }
+        });
+
+        // Handle drop
+        form.addEventListener('drop', (event) => {
+            event.preventDefault();
+            if (event.target.classList.contains('draggable-item')) {
+                event.target.classList.remove('drag-over');
+                if (draggedItem && draggedItem !== event.target) {
+                    form.insertBefore(draggedItem, event.target.nextSibling);
+                }
+            }
+        });
+
+
+        // Form submission handling to display the data
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent default form submission
+
+            // Collect the form data
+            const formData = new FormData(form);
+            const output = `
+                <h3>Submitted Data</h3>
+                <p><strong>Name:</strong> ${formData.get('name')}</p>
+                <p><strong>Email:</strong> ${formData.get('email')}</p>
+                <p><strong>Message:</strong> ${formData.get('message')}</p>
+                <p><strong>Latitude:</strong> ${formData.get('latitude')}</p>
+                <p><strong>Longitude:</strong> ${formData.get('longitude')}</p>
+            `;
+
+            // Display the form data
+            formDataDisplay.innerHTML = output;
+            formDataDisplay.style.display = 'block'; // Make it visible
+        });
+
+
+         // Update the SVG rectangle color based on latitude and longitude
+         function updateRectangleColor(latitude, longitude) {
+            const latNormalized = Math.abs(latitude % 180) / 180; // Normalize latitude to range [0, 1]
+            const longNormalized = Math.abs(longitude % 360) / 360; // Normalize longitude to range [0, 1]
+            
+            const red = Math.floor(latNormalized * 255); // Latitude determines red value
+            const blue = Math.floor(longNormalized * 255); // Longitude determines blue value
+            const green = Math.floor((latNormalized + longNormalized) / 2 * 255); // Combination of both for green
+            
+            const color = `rgb(${red}, ${green}, ${blue})`; // Final RGB color
+            geoRectangle.setAttribute('fill', color);
+        }
+
+        </script>
+    </body>
+</html>

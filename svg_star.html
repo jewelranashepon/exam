@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>SVG stars</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+          }
+      
+          .star-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+      
+          .star-rating svg {
+            width: 30px;
+            height: 50px;
+            cursor: pointer;
+            fill: #ccc; /* Default grey color */
+            transition: fill 0.3s;
+        
+          }
+      
+          .star-rating svg:hover,
+          .star-rating svg:hover ~ svg {
+            fill: gold; /* Hover color for stars */
+          }
+      
+          .star-rating svg.selected {
+            fill: gold; /* Color for selected stars */
+          }
+    </style>
+    </head>
+
+    <body>
+        <h2>Rate This Product</h2>
+
+        <div class="star-rating">
+            <!-- 5 SVG Stars -->
+            <svg data-value="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+            </svg>
+            <svg data-value="2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+            </svg>
+            <svg data-value="3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+            </svg>
+            <svg data-value="4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+            </svg>
+            <svg data-value="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+            </svg>
+        </div>
+
+        <p id="rating-output"></p>
+
+        <script>
+            // Select all the stars
+            const stars = document.querySelectorAll('.star-rating svg');
+            const ratingOutput = document.getElementById('rating-output');
+        
+            // Loop through each star to add event listeners
+            stars.forEach((star, idx) => {
+              // Hover effect to preview the rating
+              star.addEventListener('mouseover', () => {
+                resetStars(); // Reset the stars first
+                highlightStars(idx); // Highlight the current and previous stars
+              });
+        
+              // Click event to select the rating
+              star.addEventListener('click', () => {
+                resetStars();
+                highlightStars(idx, true); // Highlight and set as selected
+                const rating = star.getAttribute('data-value'); // Get the star's value
+                ratingOutput.textContent = `You rated this product: ${rating} star${rating > 1 ? 's' : ''}`;
+              });
+        
+              // Mouseout to reset stars if not selected
+              star.addEventListener('mouseout', () => {
+                resetStars();
+              });
+            });
+        
+            // Function to highlight stars up to the index provided
+            function highlightStars(index, setSelected = false) {
+              for (let i = 0; i <= index; i++) {
+                stars[i].classList.add('selected'); // Add selected class to change color
+                if (!setSelected) {
+                  stars[i].classList.remove('selected');
+                }
+              }
+            }
+        
+            // Function to reset the stars to default state
+            function resetStars() {
+              stars.forEach(star => {
+                star.classList.remove('selected');
+              });
+            }
+        </script>
+    </body>
+</html>

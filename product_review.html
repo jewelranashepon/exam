@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Product Review Form</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f9;
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .form-container {
+                max-width: 1000px;
+                margin: 50px auto;
+                padding: 30px;
+                background: #fff;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+            }
+
+            .form-group {
+                margin-bottom: 10px;
+            }
+            label {
+                display: inline;
+                margin-bottom: 8px;
+                font-weight:500;
+            }
+
+            input[type="text"], textarea {
+                width: 30%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .drop-area {
+                border: 2px dashed #ccc;
+                padding: 20px;
+                text-align: center;
+                margin-bottom: 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                width: 50%;
+            }
+
+            .drop-area.drag-over {
+                border-color: #3f51b5;
+                background-color: #e8eaf6;
+            }
+
+            .star-rating {
+                display: flex;
+                justify-content: flex-start;
+                unicode-bidi: bidi-override;
+                margin-bottom: 20px;
+                gap: 5px;
+            }
+            .star-rating svg {
+                width: 30px;
+                height: 40px;
+                cursor: pointer;
+                fill: #ccc; /* Default grey color */
+                transition: fill 0.3s;
+            }
+
+            .star-rating svg:hover,
+                .star-rating svg:hover ~ svg {
+                fill: gold; /* Hover color for stars */
+            }
+
+            .star-rating svg.selected {
+                fill: gold; /* Color for selected stars */
+            }
+
+            button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                width: 15%;
+            }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+            #gallery img {
+                width: 80px;
+            }
+           .form-data{
+                width: 300px; /* Set a width */
+                margin: 0 auto; /* Auto left and right margins will center it horizontally */
+                background-color: lightblue;
+                text-align: center; /* Optional: Center text inside the div */
+            }
+            #gallery-display{
+                width: 30px;
+                height: 20px;
+            } 
+            
+            
+            @media(max-width: 768px) {
+            .form-container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .form-container div {
+                display: grid;
+                margin-right: 20px;
+            }
+
+
+            .form-data{
+                width: 50%;
+                margin: 0 auto;
+            }
+            .star-rating{
+                display: flex;
+                gap: 0px;
+            }
+            button {
+                width: 25%;
+                padding: 8px;
+            }
+
+            input[type="text"], textarea {
+                width: 50%;
+            }
+            .star-rating svg {
+                width: 20px;
+                height: 30px;
+            }
+        }
+        </style>
+    </head>
+
+    <body>
+        <div class="form-container">
+            <h2>Product Review</h2>
+        
+            <form action="#" method="POST" enctype="multipart/form-data" id="review-form">
+            <fieldset class="form-content">
+                <legend>Product Review Form</legend>
+                <!-- Product Name -->
+                <div class="form-group">
+                    <label for="product-name">Product Name:</label>
+                    <input type="text" id="product-name" name="product_name" placeholder="Enter product name" required>
+                </div><br>
+            
+                  <!-- Review Text -->
+                <div class="form-group">
+                    <label for="review">Your Review:</label><br>
+                    <textarea id="review" name="review" rows="5" placeholder="Write your review here..." required></textarea>
+                </div><br>
+            
+                  <!-- Star Rating -->
+                <div class="form-group">
+                    <label>Rating:</label>
+                    <div class="star-rating">
+                        <svg data-value="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+                        </svg>
+
+                        <svg data-value="2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+                        </svg>
+
+                        <svg data-value="3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+                        </svg>
+
+                        <svg data-value="4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+                        </svg>
+
+                        <svg data-value="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 .587l3.668 10.825h11.332l-9.166 6.658 3.667 10.83-9.167-6.654-9.166 6.654 3.666-10.83-9.166-6.658h11.332z"/>
+                        </svg>     
+                    </div>
+                    <input type="hidden" name="rating" id="rating">
+                    <p id="rating-output">Output Rating:</p>
+
+                </div><br>
+            
+                  <!-- Image Upload (Drag and Drop) -->
+                  <div class="form-group">
+                        <label for="image-upload">Upload Product Images:</label>
+                        <div class="drop-area" id="drop-area">
+                            <p>Drag & Drop your image(s) here, or click to select files</p>
+                        </div>
+                        <input type="file" id="image-upload" name="images[]" multiple accept="image/*" style="display:none; ">
+                        <div id="gallery"></div>
+                  </div>
+            
+                  <!-- Submit Button -->
+                  <button type="submit">Submit Review</button>
+
+            </fieldset>
+            </form>
+        </div>
+        <br><br>
+
+        <!-- Display form data here -->
+         <div>
+            <div id="form-data"></div>
+            <div id="gallery-display"></div>
+
+         </div>
+        
+
+
+        <script>
+           // Select all the stars
+            const stars = document.querySelectorAll('.star-rating svg');
+            const ratingOutput = document.getElementById('rating-output');
+            const userRating = document.getElementById('rating');
+
+            // Loop through each star to add event listeners
+            stars.forEach((star, idx) => {
+            // Hover effect to preview the rating
+            star.addEventListener('mouseover', () => {
+                resetStars(); // Reset the stars first
+                highlightStars(idx); // Highlight the current and previous stars
+            });
+
+            // Click event to select the rating
+            star.addEventListener('click', () => {
+                resetStars();
+                highlightStars(idx, true); // Highlight and set as selected
+                const rating = star.getAttribute('data-value'); // Get the star's value
+                ratingOutput.textContent = `You rated this product: ${rating} star${rating > 1 ? 's' : ''}`;
+                userRating.value=rating;
+            });
+
+            // Mouseout to reset stars if not selected
+            star.addEventListener('mouseout', () => {
+                resetStars();
+            });
+            });
+
+            // Function to highlight stars up to the index provided
+            function highlightStars(index, setSelected = false) {
+            for (let i = 0; i <= index; i++) {
+                stars[i].classList.add('selected'); // Add selected class to change color
+                if (!setSelected) {
+                stars[i].classList.remove('selected');
+                }
+            }
+            }
+
+            // Function to reset the stars to default state
+            function resetStars() {
+            stars.forEach(star => {
+                star.classList.remove('selected');
+            });
+            }
+
+            // Image Upload (Drag and Drop)
+            const dropArea = document.getElementById('drop-area');
+            const imageUpload = document.getElementById('image-upload');
+            const gallery = document.getElementById('gallery');
+            let uploadedImages = [];
+
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.classList.add('drag-over');
+            });
+
+            dropArea.addEventListener('dragleave', (e) => {
+                dropArea.classList.remove('drag-over');
+            });
+
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.classList.remove('drag-over');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+
+            dropArea.addEventListener('click', () => {
+                imageUpload.click();
+            });
+
+            imageUpload.addEventListener('change', (e) => {
+                const files = e.target.files;
+                handleFiles(files);
+            });
+
+            function handleFiles(files) {
+                [...files].forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                    uploadedImages.push(file);
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    gallery.appendChild(img);
+                    }
+                });
+            }
+
+            // Display Form Data
+            const formDataDisplay = document.getElementById('form-data');
+            const displayGallery = document.getElementById('gallery-display');
+            const form = document.getElementById('review-form');
+
+
+            // Form submission handling to display the data
+            form.addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // Collect the form data
+                const formData = new FormData(form);
+                const output = `
+                    <h3>Submitted Data</h3>
+                    <p><strong>Name:</strong> ${formData.get('product_name')}</p>
+                    <p><strong>Review:</strong> ${formData.get('review')}</p>
+                    <p><strong>Rating:</strong> ${formData.get('rating')}</p>
+                `;
+
+                // Display the form data
+                formDataDisplay.innerHTML = output;
+                formDataDisplay.style.display = 'block'; // Make it visible
+
+
+                            // Display uploaded images
+                displayGallery.innerHTML = '';
+                uploadedImages.forEach(file => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = URL.createObjectURL(file);
+                    displayGallery.appendChild(imgElement);
+                });
+            });
+
+
+        </script>
+    </body>
+</html>
